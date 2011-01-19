@@ -17,6 +17,18 @@ if (!is_file(LIBS_DIR.'/BailIff/loader.php'))
 require LIBS_DIR.'/BailIff/loader.php';
 
 // Step 2: Configure environment
+// 2a) enable Nette\Debug for better exception and error visualisation
+Debug::$strictMode=TRUE;
+require_once LIBS_DIR.'/BailIff/Utils/Network.php';
+$dbg=Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1')); //must be after config
+if (!$dbg && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+	$dbg=Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.0.0/16'));
+Debug::enable($dbg? Debug::DEVELOPMENT : Debug::PRODUCTION, VAR_DIR.'/log');
+if ($dbg) {
+	NEnvironment::setMode(NEnvironment::DEVELOPMENT, TRUE);
+	NEnvironment::setMode(NEnvironment::PRODUCTION, FALSE);
+	}
+
 // 2b) try to load configuration from config.ini file
 try {
 	$nconfig=NEnvironment::loadConfig('%appDir%/nette.ini');
@@ -27,23 +39,12 @@ catch (\FileNotFoundException $e) {
 	die;
 	}
 
-// 2a) enable Nette\Debug for better exception and error visualisation
-Debug::$strictMode=TRUE;
-$dbg=Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1')); //must be after config
-if (!$dbg && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-	$dbg=Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.240.164'));
-Debug::enable($dbg? Debug::DEVELOPMENT : Debug::PRODUCTION, VAR_DIR.'/log');
-if ($dbg) {
-	NEnvironment::setMode(NEnvironment::DEVELOPMENT, TRUE);
-	NEnvironment::setMode(NEnvironment::PRODUCTION, FALSE);
-	}
-
 // Step 3: Configure application
 $application=Environment::getApplication();
 $application->errorPresenter='Error';
 
 // 3b) establish database connection
-$application->onStartup[]='BailIff\DB\Connection::initialize';
+$application->onStartup[]='BailIff\Database\Connection::initializeAll';
 
 // 3c) load panels
 
