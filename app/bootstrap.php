@@ -44,7 +44,7 @@ $application=Environment::getApplication();
 $application->errorPresenter='Error';
 
 // 3b) establish database connection
-$application->onStartup[]='BailIff\Database\Connection::initializeAll';
+$application->onStartup[]='BailIff\Database\Connection::initialize';
 
 // 3c) load panels
 
