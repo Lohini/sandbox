@@ -5,7 +5,7 @@ use Nette\Debug,
 	Nette\Application\Route,
 	Nette\Application\SimpleRouter,
 	Nette\Web\IHttpResponse,
-	BailIff\Network;
+	BailIff\Utils\Network;
 
 // REMOVE THIS LINE
 if (!is_file(LIBS_DIR.'/BailIff/loader.php'))
