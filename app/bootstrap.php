@@ -20,7 +20,7 @@ require LIBS_DIR.'/BailIff/loader.php';
 // 2a) enable Nette\Debug for better exception and error visualisation
 Debug::$strictMode=TRUE;
 require_once LIBS_DIR.'/BailIff/Utils/Network.php';
-$dbg=Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1')); //must be after config
+$dbg=Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1'));
 if (!$dbg && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
 	$dbg=Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.0.0/16'));
 Debug::enable($dbg? Debug::DEVELOPMENT : Debug::PRODUCTION, VAR_DIR.'/log');
