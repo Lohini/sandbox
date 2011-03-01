@@ -29,9 +29,9 @@ if ($dbg) {
 	NEnvironment::setMode(NEnvironment::PRODUCTION, FALSE);
 	}
 
-// 2b) try to load configuration from config.ini file
+// 2b) try to load configuration from config.neon file
 try {
-	$nconfig=NEnvironment::loadConfig('%appDir%/nette.ini');
+	$nconfig=NEnvironment::loadConfig('%appDir%/nette.neon');
 	$config=Environment::loadConfig();
 	}
 catch (\FileNotFoundException $e) {
