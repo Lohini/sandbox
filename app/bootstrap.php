@@ -47,6 +47,9 @@ $application->errorPresenter='Error';
 $application->onStartup[]='BailIff\Database\Connection::initialize';
 
 // 3c) load panels
+if ($dbg) {
+	BailIff\Utils\Translator\Panel::register();
+	}
 
 // Step 4: Setup application router
 if (NEnvironment::getName()!=='console') {

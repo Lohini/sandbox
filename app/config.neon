@@ -7,6 +7,12 @@
 common:
 	service:
 		Nette\Application\IPresenterFactory: BailIff\Application\PresenterFactory
+		Nette\ITranslator:
+			factory: BailIff\Utils\Translator\Gettext::getTranslator
+			option:
+				files:
+					Application: %appDir%/lang
+			run: true
 # BailIff
 	titleSeparator: ' | '
 	databases:
