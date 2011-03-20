@@ -1,10 +1,12 @@
-#vim: set ts=4 sw=4 ai
+# vim: set ts=4 sw=4 ai:
 # SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
 #
 # If you don't protect this directory from direct web access, anybody will be able to see your passwords.
 # http://nette.org/security-warning
 #
 common:
+	variable:
+		lang: en
 	service:
 		Nette\Application\IPresenterFactory: BailIff\Application\PresenterFactory
 		Nette\ITranslator:
@@ -17,7 +19,6 @@ common:
 	titleSeparator: ' | '
 	databases:
 		primary: mysql
-		profiler: false
 	security:
 		salt: '50m3541t'
 	database:
@@ -31,11 +32,14 @@ common:
 			charset: utf8
 			lazy: true
 			autoconnect: true # no effect as primary
-			prefix: ''
+			substitutes:
+				app: ''
 production < common:
 	mode:
 		production: true
 		debug: false
+	databases:
+		profiler: false
 development < common:
 	mode:
 		production: false
