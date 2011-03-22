@@ -63,7 +63,8 @@ if (NEnvironment::getName()!=='console') {
 				),
 			Route::ONE_WAY
 			);
-		$router[]=new Route('<presenter>/<action>/<id>', array(
+		$router[]=new Route('<lang>/<presenter>/<action>/<id>', array(
+				'lang' => NEnvironment::getVariable('lang', 'en'),
 				'presenter' => 'Core:Default',
 				'action' => 'default',
 				'id' => NULL,
