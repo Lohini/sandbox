@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="{$lang}">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Language" content="{$lang}" />
+
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+	<meta name="description" content="{$description}" n:ifset="$description">
+	<meta name="keywords" content="{$keywords}" n:ifset="$keywords">
+
+	<title>{ifset $title}{$title|striptags|trim}{$titleSeparator}{/ifset}{$webName}</title>
+
+	<link type="image/png" href="{$basePath}/img/ico/favicon.png" rel="shortcut icon" />
+	<link type="image/png" href="{$basePath}/img/ico/favicon.png" rel="icon" />
+
+	{control css 'fonts.css', 'reset.css', 'print.css'=>'print'}
+
+	<script type="text/javascript" src="{$basePath}/js/head.js"></script>
+	{control js:singles 'jquery.js'=>'m', 'jquery.livequery.js'=>'m', 'flash.js'=>'p'}
+
+</head>
+
+<body><!-- global -->
+	<div id="flashes" n:snippet="flashMessage">
+		<div class="flash {$flash->type}" n:foreach="$flashes as $flash">{!$flash->message}</div>
+	</div>
+	<div id="content">
+		{include #content}
+	</div>
+</body>
+</html>
