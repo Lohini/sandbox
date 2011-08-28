@@ -1,10 +1,8 @@
-<?php // vim: set ts=4 sw=4 ai:
-namespace CoreModule;
-
-use BailIff\Presenters\Base;
+<?php // vim: ts=4 sw=4 ai:
+namespace App\CoreModule;
 
 class DefaultPresenter
-extends Base
+extends \Lohini\Presenters\BasePresenter
 {
 	public function renderDefault()
 	{

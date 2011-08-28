@@ -1,0 +1,31 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+common:
+	variables:
+		lang: en
+	services:
+		robotLoader:
+			run: true
+		translator:
+			params:
+				files:
+					Application: %appDir%/lang
+	titleSeparator: ' | '
+	useSkins: true
+	proxiesDir: '%tempDir%/proxies'
+production < common:
+	params:
+		production: true
+		debug: false
+	databases:
+		profiler: false
+development < common:
+	params:
+		production: false
+		debug: true
+	databases:
+		profiler: true

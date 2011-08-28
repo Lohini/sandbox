@@ -5,47 +5,21 @@
 # http://nette.org/security-warning
 #
 common:
-	variable:
-		lang: en
-	service:
-		Nette\Application\IPresenterFactory: BailIff\Application\PresenterFactory
-		Nette\ITranslator:
-			factory: BailIff\Utils\Translator\Gettext::getTranslator
-			option:
-				files:
-					Application: %appDir%/lang
-			run: true
-# BailIff
-	titleSeparator: ' | '
-	databases:
-		primary: mysql
+	services:
+		authorizator: Lohini\Security\Authorizator
 	security:
 		salt: '50m3541t'
-	database:
-		mysql:
-			driver: mysqli
+	databases:
+		sqldb:
+			driver: pdo_mysql
 			host: localhost
-			username: username
+			user: username
 			password: password
-			database: bailiff
+			dbname: bailiff
 			persistent: true
 			charset: utf8
 			lazy: true
-			autoconnect: true # no effect as primary
 			substitutes:
 				app: ''
 production < common:
-	mode:
-		production: true
-		debug: false
-	databases:
-		profiler: false
 development < common:
-	mode:
-		production: false
-		debug: true
-	databases:
-		profiler: true
-	database:
-		mysql:
-			lazy: false

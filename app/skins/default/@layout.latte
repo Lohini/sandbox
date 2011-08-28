@@ -2,7 +2,6 @@
 <html lang="{$lang}">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta http-equiv="Content-Language" content="{$lang}" />
 
 	<meta name="robots" content="{$robots}" n:ifset="$robots">
 	<meta name="description" content="{$description}" n:ifset="$description">
@@ -13,11 +12,12 @@
 	<link type="image/png" href="{$basePath}/img/ico/favicon.png" rel="shortcut icon" />
 	<link type="image/png" href="{$basePath}/img/ico/favicon.png" rel="icon" />
 
-	{control css 'fonts.css', 'reset.css', 'print.css'=>'print'}
+	{control css 'normalize.css', 'jquery-ui.css', 'site.css', 'print.css'=>'print'}
+	{block #css}{/block}
 
 	<script type="text/javascript" src="{$basePath}/js/head.js"></script>
-	{control js:singles 'jquery.js'=>'m', 'jquery.livequery.js'=>'m', 'flash.js'=>'p'}
-
+	{control js 'yepnope.js', 'modernizr.js', 'jquery.js', 'jquery.livequery.js', 'jquery-ui.js', 'flash.js'}
+	{block #js}{/block}
 </head>
 
 <body><!-- global -->

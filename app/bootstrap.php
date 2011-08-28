@@ -1,76 +1,78 @@
-<?php // vim: set ts=4 sw=4 ai:
-use Nette\Debug,
-	Nette\Environment as NEnvironment,
-	BailIff\Environment,
-	Nette\Application\Route,
-	Nette\Application\SimpleRouter,
-	Nette\Web\IHttpResponse,
-	BailIff\Utils\Network;
+<?php // vim: ts=4 sw=4 ai:
+use Nette\Environment,
+	Nette\Application\Routers\Route,
+	Nette\Http\IResponse,
+	Nette\Diagnostics\Debugger;
 
 // REMOVE THIS LINE
-if (!is_file(LIBS_DIR.'/BailIff/loader.php'))
-	die('Copy BailIff to /libs/ directory.');
+if (!is_file(LIBS_DIR.'/Lohini/loader.php')) {
+	die('Copy Lohini to directory '"LIBS_DIR."'.');
+	}
+if (file_exists(WWW_DIR.'/install')) {
+	die("Remove installation dir '".WWW_DIR."/install'");
+	}
 
-// Step 1: Load BailIff
+// Step 1: Load Lohini
 // this allows load Framework classes automatically so that
 // you don't have to litter your code with 'require' statements
-require LIBS_DIR.'/BailIff/loader.php';
+require LIBS_DIR.'/Lohini/loader.php';
 
 // Step 2: Configure environment
 // 2a) enable Nette\Debug for better exception and error visualisation
-Debug::$strictMode=TRUE;
-require_once LIBS_DIR.'/BailIff/Utils/Network.php';
-$dbg=Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1'));
+$dbg=\Lohini\Utils\Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1'));
 if (!$dbg && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-	$dbg=Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.0.0/16'));
-Debug::enable($dbg? Debug::DEVELOPMENT : Debug::PRODUCTION, VAR_DIR.'/log');
-if ($dbg) {
-	NEnvironment::setMode(NEnvironment::DEVELOPMENT, TRUE);
-	NEnvironment::setMode(NEnvironment::PRODUCTION, FALSE);
-	}
+	$dbg=\Lohini\Utils\Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.0.0/16'));
+Debugger::enable($dbg? Debugger::DEVELOPMENT : Debugger::PRODUCTION, VAR_DIR.'/log');
 
 // 2b) try to load configuration from config.neon file
 try {
-	$nconfig=NEnvironment::loadConfig('%appDir%/nette.neon');
-	$config=Environment::loadConfig();
+	$section=
+		isset($_SERVER['APPENV'])
+			? $_SERVER['APPENV']
+			: ($dbg
+				? Environment::DEVELOPMENT
+				: Environment::PRODUCTION
+				)
+		;
+	$configurator=new \Lohini\DI\Configurator;
+	$configurator->loadConfig(
+		array(
+			'%appDir%/nette.neon',
+			'%appDir%/lohini.neon',
+			'%appDir%/config.neon'
+			),
+		$section
+		);
 	}
-catch (\FileNotFoundException $e) {
-	NEnvironment::getHttpResponse()->redirect('/install/index.php', IHttpResponse::S307_TEMPORARY_REDIRECT);
+catch (\Nette\FileNotFoundException $e) {
+	Environment::getHttpResponse()->redirect('/install/index.php', IHttpResponse::S307_TEMPORARY_REDIRECT);
 	die;
+	}
+if ($dbg) {
+	$configurator->container->params['productionMode']=FALSE;
 	}
 
 // Step 3: Configure application
-$application=Environment::getApplication();
+$application=$configurator->container->application;
 $application->errorPresenter='Error';
 
-// 3b) establish database connection
-$application->onStartup[]='BailIff\Database\Connection::initialize';
-
-// 3c) load panels
-if ($dbg) {
-	BailIff\Utils\Translator\Panel::register();
-	}
+// 3a) load panels
+\Lohini\Database\Doctrine\ORM\Diagnostics\Panel::register();
 
 // Step 4: Setup application router
-if (NEnvironment::getName()!=='console') {
+$application->onStartup[]=function() use ($application) {
 	$router=$application->getRouter();
 
-	// mod_rewrite detection
-		$router[]=new Route('index.php', array(
-				'module' => 'Core',
-				'presenter' => 'Default',
-				'action' => 'default',
-				),
-			Route::ONE_WAY
-			);
-		$router[]=new Route('<lang>/<presenter>/<action>/<id>', array(
-				'lang' => NEnvironment::getVariable('lang', 'en'),
-				'presenter' => 'Core:Default',
-				'action' => 'default',
-				'id' => NULL,
-				)
-			);
-	} // if !console
+	$router[]=new Route('index.php', array(
+			'lang' => Environment::getVariable('lang', 'en'),
+			'module' => 'Core',
+			'presenter' => 'Default',
+			'action' => 'default',
+			),
+		Route::ONE_WAY
+		);
+	$router[]=new Route('[<lang=en [a-z]{2}>/]<presenter>[/<action>[/<id>]]', 'Core:Default:default');
+	}
 
 // Step 5: Run the application!
 $application->run();
