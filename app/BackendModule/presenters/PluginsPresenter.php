@@ -249,4 +249,10 @@ extends BasePresenter
 		$this->flashMessage("Plugin '$entity->name' removed", 'success');
 		$this['gridMain']->invalidateControl();
 	}
+
+	public function handleUpdateAvailability()
+	{
+		$this->context->pluginManager->updateAvailability();
+		$this['gridMain']->invalidateControl();
+	}
 }
