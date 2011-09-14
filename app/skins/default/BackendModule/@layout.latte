@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{$lang}">
+<head><!-- skin default -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<meta name="robots" content="{$robots}" n:ifset="$robots">
+	<meta name="description" content="{$description}" n:ifset="$description">
+	<meta name="keywords" content="{$keywords}" n:ifset="$keywords">
+
+	<title>{ifset $title}{$title}{$titleSeparator}{/ifset}{=SITE}</title>
+
+	<link type="image/png" href="{$basePath}/img/ico/favicon.png" rel="shortcut icon" />
+	<link type="image/png" href="{$basePath}/img/ico/favicon.png" rel="icon" />
+	<link type="text/plain" href="{$basePath}/humans.txt" rel="author" />
+
+	{control css:static 'fonts.css', 'reset.css', 'site.css', 'print.css'=>'print', 'jquery-ui.css'}
+	{block #css}{/block}
+
+	<script type="text/javascript" src="{$basePath}/js/head.js"></script>
+	{control js:static 'yepnope.js', 'modernizr.js', 'jquery.js', 'jquery.livequery.js', 'jquery-ui.js', 'bailiff.js'}
+	{block #js}{/block}
+</head>
+
+<body><!-- admin -->
+	<div id="wrapper">
+		<div id="header">
+			<a id="homelink" href="{plink Default:}">ACL admin</a>
+
+			<div id="userbox">
+				<p n:if="$identity">Prihlásený ako <strong>{$identity->displayName}</strong> [{$identity->role->name}] | <a n:href=":Core:Auth:logout">odhlásiť</a></p>
+			</div><!-- #userbox -->
+		</div><!-- #header -->
+
+		<div id="flashes" n:snippet="flashMessage">
+			<div class="flash {$flash->type}" n:foreach="$flashes as $flash">{!$flash->message}</div>
+		</div>
+		<div id="content">
+			{include #content}
+		</div><!-- #content -->
+	</div><!-- #wrapper -->
+</body>
+</html>
