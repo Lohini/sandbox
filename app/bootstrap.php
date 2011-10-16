@@ -2,7 +2,8 @@
 use Nette\Environment,
 	Nette\Application\Routers\Route,
 	Nette\Http\IResponse,
-	Nette\Diagnostics\Debugger;
+	Nette\Diagnostics\Debugger,
+	Lohini\Utils\Network;
 
 // REMOVE THIS LINE
 if (!is_file(LIBS_DIR.'/Lohini/loader.php')) {
@@ -19,9 +20,7 @@ require LIBS_DIR.'/Lohini/loader.php';
 
 // Step 2: Configure environment
 // 2a) enable Nette\Debug for better exception and error visualisation
-$dbg=\Lohini\Utils\Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1'));
-if (!$dbg && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-	$dbg=\Lohini\Utils\Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.0.0/16'));
+$dbg=Network::HostInCIDR(Network::getRemoteIP(), array('10.0.0.0/8', '127.0.0.1'));
 Debugger::enable($dbg? Debugger::DEVELOPMENT : Debugger::PRODUCTION, VAR_DIR.'/log');
 
 // 2b) try to load configuration from config.neon file
