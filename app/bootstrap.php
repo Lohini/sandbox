@@ -6,7 +6,7 @@ use Nette\Environment,
 
 // REMOVE THIS LINE
 if (!is_file(LIBS_DIR.'/Lohini/loader.php')) {
-	die('Copy Lohini to directory '"LIBS_DIR."'.');
+	die("Copy Lohini to directory '".LIBS_DIR."'.");
 	}
 if (file_exists(WWW_DIR.'/install')) {
 	die("Remove installation dir '".WWW_DIR."/install'");
