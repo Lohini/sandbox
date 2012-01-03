@@ -1,7 +1,6 @@
 <?php // vim: ts=4 sw=4 ai:
 use Nette\Environment,
 	Nette\Application\Routers\Route,
-	Nette\Http\IResponse,
 	Nette\Diagnostics\Debugger;
 
 // REMOVE THIS LINE
@@ -20,8 +19,6 @@ require LIBS_DIR.'/Lohini/loader.php';
 // Step 2: Configure environment
 // 2a) enable Nette\Debug for better exception and error visualisation
 $dbg=\Lohini\Utils\Network::HostInCIDR($_SERVER['REMOTE_ADDR'], array('10.0.0.0/8', '127.0.0.1'));
-if (!$dbg && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-	$dbg=\Lohini\Utils\Network::HostInCIDR($_SERVER['HTTP_X_FORWARDED_FOR'], array('192.168.0.0/16'));
 Debugger::enable($dbg? Debugger::DEVELOPMENT : Debugger::PRODUCTION, VAR_DIR.'/log');
 
 // 2b) try to load configuration from config.neon file
@@ -45,7 +42,7 @@ try {
 		);
 	}
 catch (\Nette\FileNotFoundException $e) {
-	Environment::getHttpResponse()->redirect('/install/index.php', IHttpResponse::S307_TEMPORARY_REDIRECT);
+	Environment::getHttpResponse()->redirect('/install/index.php', \Nette\Http\IResponse::S307_TEMPORARY_REDIRECT);
 	die;
 	}
 if ($dbg) {
@@ -72,7 +69,7 @@ $application->onStartup[]=function() use ($application) {
 		Route::ONE_WAY
 		);
 	$router[]=new Route('[<lang=en [a-z]{2}>/]<presenter>[/<action>[/<id>]]', 'Core:Default:default');
-	}
+	};
 
 // Step 5: Run the application!
 $application->run();
