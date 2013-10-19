@@ -1,0 +1,57 @@
+common:
+	parameters:
+	php:
+		date.timezone: Europe/Bratislava
+	nette:
+		application:
+			errorPresenter: Error
+			mapping:
+				*: App\*Module\*Presenter
+		session:
+			autoStart: smart
+			expiration: 14 days
+	extensions:
+		console: Kdyby\Console\DI\ConsoleExtension
+		events: Kdyby\Events\DI\EventsExtension
+		annotations: Kdyby\Annotations\DI\AnnotationsExtension
+		doctrine: Kdyby\Doctrine\DI\OrmExtension
+		webloader: Lohini\WebLoader\DI\WebLoaderExtension
+		redis: Kdyby\Redis\DI\RedisExtension
+	services:
+		routerFactory: App\RouterFactory
+		router: @routerFactory::createRouter
+	doctrine:
+		user: lohini
+		password: sandbox
+		dbname: lohini
+		metadata:
+			App: %appDir%
+	redis:
+		journal: {database: 1}
+		storage: {database: 1}
+		session: {database: 0}
+	webloader:
+		basePath: 'wl'
+	lohini:
+		templating:
+			skin: default
+
+production < common:
+	nette:
+		debugger:
+			strictMode: TRUE
+
+development < common:
+	nette:
+		application:
+			debugger: TRUE
+		routing:
+			debugger: TRUE
+		security:
+			debugger: TRUE
+		container:
+			debugger: TRUE
+		debugger:
+			bar:
+				- Lohini\WebLoader\Diagnostics\Panel
+				- NetteExtras\XDebugHelper

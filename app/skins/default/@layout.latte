@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>{#title|striptags|strip|upper}Lohini Application Skeleton{/#}</title>
+		<meta name="description" content="{$metaDescription}" n:ifset="$metaDescription">
+		<meta name="keywords" content="{$metaKeywords}" n:ifset="$metaKeywords">
+		<meta name="viewport" content="width=device-width">
+
+		<meta name="robots" content="{$robots}" n:ifset="$robots">
+
+		<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		{control css 'normalize.css', 'screen.css'=>'screen,projection,tv', 'print.css'=>'print', 'jquery-ui-1.10.3.custom.min.css'}
+		<link rel="shortcut icon" href="{$basePath}/favicon.ico">
+		{#head}{/#}
+	</head>
+
+	<body>
+		<!--[if lt IE 7]>
+			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+		<![endif]-->
+		<script>document.documentElement.className+=' js'</script>
+
+		<div class="container" n:block="body">
+			<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+
+			{include #content}
+		</div>
+
+		{#scripts}
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script>window.jQuery || document.write('<script src="\/js\/jquery-1.10.2.min.js"><\/script>')</script>
+		{control js 'nette.ajax.js', 'lohini/flashMessage.js', 'extensions/spinner.ajax.js'}
+		{/#}
+		<script src="{$basePath}{='/js/main.js'|mtime}"></script>
+	</body>
+</html>

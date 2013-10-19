@@ -1,0 +1,37 @@
+{
+	"name": "lohini/sandbox",
+	"description": "Lohini sandbox - pre-packed base Lohini project",
+	"type": "project",
+	"keywords": ["lohini", "sandbox"],
+	"homepage": "http://lohini.net",
+	"license": ["GPL-3.0", "BSD-3-Clause", "GPL-2.0"],
+	"authors": [
+		{
+			"name": "Pavol Hluchý",
+			"homepage": "http://lopo.losys.eu"
+		}
+	],
+	"support": {
+		"email": "lopo@lohini.net",
+		"issues": "https://github.com/Lohini/sandbox/issues",
+		"source": "https://github.com/Lohini/sandbox"
+	},
+	"require": {
+		"lohini/framework": "@dev",
+		"kdyby/doctrine": "@dev",
+		"kdyby/redis": "@dev",
+		"lohini/webloader": "@dev",
+		"lopo/phpsass": "@dev",
+		"lopo/phpsass-compass": "@dev",
+		"symfony/console": "@dev"
+	},
+	"minimum-stability": "dev",
+	"require-dev": {
+		"jsmitka/nette-xdebug-helper": "@dev"
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"mkdir -m 0777 -p temp/ log/"
+		]
+	}
+}
