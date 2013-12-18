@@ -18,12 +18,12 @@
 	},
 	"require": {
 		"lohini/framework": "@dev",
+		"lohini/cf": "@dev",
 		"kdyby/doctrine": "@dev",
 		"kdyby/redis": "@dev",
 		"lohini/webloader": "@dev",
 		"lopo/phpsass": "@dev",
-		"lopo/phpsass-compass": "@dev",
-		"symfony/console": "@dev"
+		"lopo/phpsass-compass": "@dev"
 	},
 	"minimum-stability": "dev",
 	"require-dev": {
