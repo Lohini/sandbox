@@ -26,4 +26,4 @@ if (file_exists($localConf=APP_DIR.'/config/config.local.neon')) {
 /** @var SystemContainer $container */
 $container=$configurator->createContainer();
 
-$container->application->run();
+$container->getService('application')->run();
